@@ -1,0 +1,460 @@
+Animal:
+
+package fazenda.pitombeira;
+
+
+import java.util.Scanner;
+
+public class Animal {
+    private int id;
+    private String nome;
+    private String raca;
+    private int idade;
+    private double producaodiaria;
+
+    public Animal(int id, String nome, String raca, int idade, double producaodiaria) {
+        this.id = id;
+        this.nome = nome;
+        this.raca = raca;
+        this.idade = idade;
+        this.producaodiaria = producaodiaria;
+    }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public String getRaca() {
+        return raca;
+    }
+    public void setRaca(String raca) {
+        this.raca = raca;
+    }
+     public int getIdade() {
+        return idade;
+    }
+     public void setIdade(int idade) {
+         this.idade = idade;
+     }
+    public double getProducaodiaria() {
+        return producaodiaria;
+    }
+    public void setProducaodiaria(int producaodiaria) {
+        this.producaodiaria = producaodiaria;
+    }
+   
+    public static void atualizarProducao(Fazenda fazenda) {
+    Scanner entrada = new Scanner(System.in);
+    System.out.println("Informe o ID do animal para atualizar a produção:");
+    int idAnimal = entrada.nextInt();
+   
+    Animal animalEncontrado = null;
+    for (Animal animal : fazenda.getListaDeAnimais()) {
+        if (animal.getId() == idAnimal) {
+            animalEncontrado = animal;
+            break;
+        }
+    }
+   
+    if (animalEncontrado != null) {
+        System.out.println("Informe a quantidade de leite produzida (em litros):");
+        double quantidadeProduzida = entrada.nextDouble();
+       
+        double novaProducaoDiaria = animalEncontrado.getProducaodiaria() + quantidadeProduzida;
+        animalEncontrado.setProducaodiaria((int) novaProducaoDiaria);
+       
+        System.out.println("Produção registrada com sucesso!");
+        System.out.println("Nova produção diária do animal " + animalEncontrado.getNome() + ": " + novaProducaoDiaria + " litros");
+    } else {
+        System.out.println("Animal com ID " + idAnimal + " não encontrado.");
+    }
+}
+
+    public static class Bovino extends Animal {
+
+        public Bovino(int id, String nome, String raca, int idade, double producaodiaria) {
+            super(id, nome, raca, idade, producaodiaria);
+        }
+       
+        public static boolean produzleite() {
+            Scanner entrada = new Scanner(System.in);
+            System.out.println("O animal produz leite? [1] Sim [2] Não");
+            int resposta = entrada.nextInt();
+            return resposta == 1;
+        }
+    }
+}
+
+FazendaPitombeira(Main): 
+
+package fazenda.pitombeira;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class FazendaPitombeira {
+   
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        int opcao, opcao2;
+        List<Animal> listaDeAnimais = new ArrayList<>();
+        List<Tanque> listaDeTanque = new ArrayList<>();;
+        Fazenda fazenda = new Fazenda("Pitombeira", "Santa Cruz - PB", listaDeAnimais, listaDeTanque);
+        do {
+            System.out.println("\n == MKI Fazenda ==");
+            System.out.println("[1] Registrar Animais");
+            System.out.println("[2] Exibir Animais");
+            System.out.println("[3] Registrar Tanque");
+            System.out.println("[4] Exibir Tanques");
+            System.out.println("[5] Gerar Relatorio de Produção");
+            System.out.println("[6] Gerar Relatorio de Armazenamento");
+            System.out.println("[7] Atualizar Produção");
+            System.out.println("[8] Opções de tanque");
+            System.out.println("[0] Sair");
+            System.out.println("Escolha uma opção: ");
+            opcao = entrada.nextInt();
+           
+            switch (opcao) {
+                case 1:
+                    Fazenda.registrarAnimal();
+                    break;
+                case 2:
+                    Fazenda.exibirAnimais();
+                    break;
+                case 3:
+                    Fazenda.registrarTanque();
+                    break;
+                case 4:
+                    Fazenda.exibirTanques();
+                    break;
+                case 5:
+                    Fazenda.gerarRelatorioProducao();
+                    break;
+                case 6:
+                    Fazenda.gerarRelatorioArmazenamento();
+                    break;
+                case 7:
+                    Animal.atualizarProducao(fazenda);
+                    break;
+                case 8:
+                    System.out.println("[1] Armazenar Leite");
+                    System.out.println("[2] Remover Leite");
+                    System.out.println("[3] Validar Quantidade");
+                    System.out.print("Escolha uma opção: ");
+                    opcao2 = entrada.nextInt();
+                   
+                    System.out.print("Informe o ID do tanque: ");
+                    int idTanque = entrada.nextInt();
+                    Tanque tanqueSelecionado = null;
+                   
+                    for (Tanque tanque : listaDeTanque) {
+                        if (tanque.getId() == idTanque) {
+                            tanqueSelecionado = tanque;
+                            break;
+                        }
+                    }
+                   
+                    if (tanqueSelecionado == null) {
+                        System.out.println("Tanque não encontrado.");
+                    } else {
+                        switch (opcao2) {
+                            case 1:
+                                tanqueSelecionado.armazenarLeite();
+                                break;
+                            case 2:
+                                tanqueSelecionado.removerLeite();
+                                break;
+                            case 3:
+                                tanqueSelecionado.validarQuantidade();
+                                break;
+                            default:
+                                System.out.println("Opção inválida. Tente novamente.");
+                        }
+                    }
+                    break;
+                case 0:
+                    System.out.println("Fechando sistema...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+        while (opcao != 0);      
+    }
+}
+
+
+Fazenda:
+
+package fazenda.pitombeira;
+
+
+import fazenda.pitombeira.Animal.Bovino;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Fazenda {
+    private String nome;
+    private String endereco;
+    private static List<Animal> listaDeAnimais = new ArrayList<>();
+    private static List<Tanque> listaDeTanque = new ArrayList<>();;
+
+    public Fazenda(String nome, String endereco, List listaDeAnimais, List listaDeTanque) {
+        this.nome = nome;
+        this.endereco = endereco;
+        this.listaDeAnimais = listaDeAnimais;
+        this.listaDeTanque = listaDeTanque;
+    }
+   
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public String getEndereco() {
+        return endereco;
+    }
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+    public List<Animal> getListaDeAnimais() {
+        return listaDeAnimais;
+    }
+    public void setListaDeAnimais(List listaDeAnimais) {
+        this.listaDeAnimais = listaDeAnimais;
+    }
+    public List getListaDeTanque() {
+        return listaDeTanque;
+    }
+    public void setListaDeTanque(List listaDeTanque) {
+        this.listaDeTanque = listaDeTanque;
+    }
+    public static void registrarAnimal() {
+        Scanner entrada = new Scanner(System.in);
+        int id = 1;
+        String name;
+        String raca;
+        int idade;
+        boolean bovino;
+        double producaodiaria;
+       
+        for (Animal animal : listaDeAnimais) {
+            id += 1;
+        }
+        System.out.println("Insira o nome do animal: ");
+        name = entrada.nextLine();
+        System.out.println("Insira a raça do animal: ");
+        raca = entrada.nextLine();
+        System.out.println("Insira a idade do animal: ");
+        idade = entrada.nextInt();
+        bovino = Bovino.produzleite();
+
+        if (bovino) {
+            System.out.println("Insira a produção diária do animal em litros: ");
+            producaodiaria = entrada.nextDouble();
+            Animal animal = new Animal.Bovino(id, name, raca, idade, producaodiaria);
+            System.out.println("Animal adicionado com sucesso!");
+            listaDeAnimais.add(animal);
+        }
+        else {
+            Animal animal = new Animal(id, name, raca, idade, 0);
+            System.out.println("Animal adicionado com sucesso!");
+            listaDeAnimais.add(animal);
+        }
+    }
+
+    public static void exibirAnimais() {
+        System.out.println("Animais cadastrados:");
+        if (listaDeAnimais.isEmpty()) {
+            System.out.println("Nenhum animal registrado na fazenda.");
+        }
+        else {
+            for (Animal animal : listaDeAnimais) {
+            System.out.println("ID: " + animal.getId() + ", Nome: " + animal.getNome() + ", Raça: " + animal.getRaca() + ", Idade: " + animal.getIdade() + ", Produção Diária: " + animal.getProducaodiaria() + " Litros");
+            }
+        }
+    }
+    public static void exibirTanques() {
+        System.out.println("Tanques cadastrados:");
+        if (listaDeTanque.isEmpty()) {
+            System.out.println("Nenhum tanque registrado na fazenda.");
+        }
+        else {
+            for (Tanque tanque : listaDeTanque) {
+            System.out.println("\nID: " + tanque.getId() + "\nCapacidade Máxima: " + tanque.getCapacidadeMaxima() + "L\nQuantidade atual: " + tanque.getQuantidadeAtual() + "\nValidade: " + tanque.getValidadeDoLeite() + "d\n=========================================");
+            }
+        }
+    }
+    public static void registrarTanque() {
+        Scanner entrada = new Scanner(System.in);
+        int id = 1;
+        int capacidadeMaxima;
+        int quantidadeAtual;
+        String validadeDoLeite;
+        for (Tanque tanque : listaDeTanque) {
+            id += 1;
+        }
+        System.out.println("Informe a capacidade máxima de litros do tanque:" );
+        capacidadeMaxima = entrada.nextInt();
+        System.out.println("Informe a quantidade atual de leite no tanque: ");
+        quantidadeAtual = entrada.nextInt();
+        entrada.nextLine();
+        System.out.println("Informe por quantos dias o leite será válido: ");
+        validadeDoLeite = entrada.nextLine();
+       
+        if (quantidadeAtual > capacidadeMaxima) {
+            System.out.println("A quantidade de leite atual informada excede a capacidade máxima do tanque.");
+        }
+        else {
+            Tanque tanque = new Tanque(id, capacidadeMaxima, quantidadeAtual, validadeDoLeite);
+            listaDeTanque.add(tanque);
+            System.out.println("Tanque adicionado ao sistema com sucesso.");
+        }
+    }
+    public static void gerarRelatorioProducao() {
+       
+    if (listaDeAnimais.isEmpty()) {
+            System.out.println("Nenhum animal registrado na fazenda.");
+            return;
+        }
+
+        System.out.println("Relatório de Produção de Leite por Animal:");
+        double totalLeite = 0;
+
+        for (Animal animal : listaDeAnimais) {
+            double producaoDiaria = animal.getProducaodiaria();
+            totalLeite += animal.getProducaodiaria();
+
+            System.out.println("ID Animal: " + animal.getId() + ", Produção Diária: " + animal.getProducaodiaria() + " litros");
+        }
+
+        System.out.println("\nTotal diário de leite produzido por todos os animais: " + totalLeite + " litros");
+    }
+
+       
+    public static void gerarRelatorioArmazenamento() {
+       
+    if (listaDeTanque.isEmpty()) {
+        System.out.println("Nenhum tanque registrado na fazenda.");
+        return;
+    }
+
+        System.out.println("Relatório de Armazenamento de Leite nos Tanques:");
+        double totalLeiteArmazenado = 0;
+        double capacidadeTotalTanques = 0;
+
+        for (Tanque tanque : listaDeTanque) {
+            totalLeiteArmazenado += tanque.getQuantidadeAtual();
+            capacidadeTotalTanques += tanque.getCapacidadeMaxima();
+
+            System.out.println("ID Tanque: " + tanque.getId() + ", Quantidade Atual: " + tanque.getQuantidadeAtual() + " litros" + ", Validade: " + tanque.getValidadeDoLeite());
+        }
+        System.out.println("\nTotal de Leite Armazenado: " + totalLeiteArmazenado + " litros");
+        System.out.println("Capacidade Total dos Tanques: " + capacidadeTotalTanques + " litros");
+        System.out.println("Espaço Livre: " + (capacidadeTotalTanques - totalLeiteArmazenado) + " litros");
+    }
+}
+
+Tanque:
+
+package fazenda.pitombeira;
+import java.util.Scanner;
+
+
+public class Tanque {
+    private int id;
+    private int capacidadeMaxima;
+    private int quantidadeAtual;
+    private String validadeDoLeite;
+   
+    public Tanque(int id, int capacidadeMaxima, int quantidadeAtual, String validadeDoLeite) {
+        this.id = id;
+        this.capacidadeMaxima = capacidadeMaxima;
+        this.quantidadeAtual = quantidadeAtual;
+        this.validadeDoLeite = validadeDoLeite;
+    }    
+   
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getCapacidadeMaxima() {
+        return capacidadeMaxima;
+    }
+    public void setCapacidadeMaxima(int capacidadeMaxima) {
+        this.capacidadeMaxima = capacidadeMaxima;
+    }
+    public int getQuantidadeAtual() {
+        return quantidadeAtual;
+    }
+    public void setQuantidadeAtual(int quantidadeAtual) {
+        this.quantidadeAtual = quantidadeAtual;
+    }
+    public String getValidadeDoLeite() {
+        return validadeDoLeite;
+    }
+    public void setValidadeDoLeite(String validadeDoLeite) {
+        this.validadeDoLeite = validadeDoLeite;
+    }
+   
+   public void armazenarLeite() {
+    Scanner entrada = new Scanner(System.in);
+    System.out.println("Quantos litros de leite deseja armazenar no tanque?");
+    int quantia = entrada.nextInt();
+   
+        if (quantia > 0) {
+            this.quantidadeAtual += quantia;
+            setQuantidadeAtual(this.quantidadeAtual);
+            validarQuantidade();
+            System.out.println("Operação realizada com sucesso!");
+        }
+        else {
+            System.out.println("Valor inválido. A quantidade deve ser positiva.");
+        }
+    }
+
+    public void removerLeite() {
+       
+    Scanner entrada = new Scanner(System.in);
+    System.out.println("Quanto leite deseja remover do tanque?");
+    int quantia = entrada.nextInt();
+   
+     if (quantia > 0) {
+        this.quantidadeAtual -= quantia;
+        setQuantidadeAtual(this.quantidadeAtual);
+        validarQuantidade();
+        System.out.println("Operação realizada com sucesso!");
+     }
+     else {
+        System.out.println("Valor inválido. A quantidade deve ser positiva.");
+        }
+    }
+
+    public void validarQuantidade() {
+        if (this.quantidadeAtual < 0) {
+        System.out.println("Erro: A quantidade de leite no tanque está negativa. Ajustaremos para 0.");
+        this.quantidadeAtual = 0;
+        }
+        else if (this.quantidadeAtual > this.capacidadeMaxima) {
+        System.out.println("Aviso: A quantidade de leite excede a capacidade máxima do tanque... Escolha outro tanque para armazenar.");
+        this.quantidadeAtual = this.capacidadeMaxima;
+        }
+        else {
+        System.out.println("Quantidade de leite no tanque está dentro dos limites permitidos.");
+        }
+   }
+}
